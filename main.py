@@ -116,31 +116,32 @@ def spawn_bullet_green(event):
         y1 += 68
         if x < x1 <= x + 136 and y <= y1 <= y + 136:
             bullet1 = BulletClass(x1, y1,
-                                  c.create_image(202, 669, image=bullet_creat_green, anchor=NW))
+                                  c.create_image(216, 669, image=bullet_creat_green, anchor=NW))
             c.tag_lower(bullet1.image)
             bullet.append(bullet1)
 
 
-def spawn_bullet_blue(event):
-    for i in range(len(res)):
-        res1 = res[i]["img"]
-        x, y = c.coords(res1)
-        c.tag_raise(base1, res1)
-        if event.x > x and event.x <= x + 136 and event.y >= y and event.y <= y + 136:
-            bullet2 = c.create_image(496, 669, image=bullet_creat_blue, anchor=NW)
-            c.tag_lower(bullet2)
-            bullet_blue.append({"fill": bullet2})
+# def spawn_bullet_blue(event):
+#     for i in range(len(res)):
+#         res1 = res[i]["img"]
+#         x, y = c.coords(res1)
+#         c.tag_raise(base1, res1)
+#         if event.x > x and event.x <= x + 136 and event.y >= y and event.y <= y + 136:
+#             bullet2 = c.create_image(496, 669, image=bullet_creat_blue, anchor=NW)
+#             c.tag_lower(bullet2)
+#             bullet_blue.append({"fill": bullet2})
 
 
 def Move_two_bul(event):
-    spawn_bullet_blue(event)
+    #spawn_bullet_blue(event)
     spawn_bullet_green(event)
-
-
 c.bind("<Button-1>", Move_two_bul)
 
 
 def Move_bullet():
+    c.tag_raise(cannon_blue)
+    c.tag_raise(cannon_green)
+    c.tag_raise(cannon_red)
     t1 = []
     for i in range(len(bullet)):
         bullet1 = bullet[i]
@@ -163,16 +164,16 @@ def Move_bullet():
 c.after(6, Move_bullet)
 
 
-def Move_bullet_blue():
-    c.tag_raise(cannon_blue)
-    c.tag_raise(cannon_green)
-    for i in range(len(bullet_blue)):
-        bullet1 = bullet_blue[i]["fill"]
-        c.move(bullet1, 0, -100)
-    c.after(50, Move_bullet_blue)
+# def Move_bullet_blue():
+#     c.tag_raise(cannon_blue)
+#     c.tag_raise(cannon_green)
+#     for i in range(len(bullet_blue)):
+#         bullet1 = bullet_blue[i]["fill"]
+#         c.move(bullet1, 0, -100)
+#     c.after(50, Move_bullet_blue)
 
 
-c.after(50, Move_bullet_blue)
+#c.after(50, Move_bullet_blue)
 
 
 def Layer():
@@ -225,48 +226,48 @@ def Player():
 
 c.after(50, Player)
 
-
-def Player2():
-    n = 0
-    S = 0
-    v = 0
-    for j in range(len(bullet_blue)):
-        for i in range(len(res)):
-            bullet1 = bullet_blue[j - n]["fill"]
-            x1, y1 = c.coords(bullet1)
-            res1 = res[i]["img"]
-            x2, y2 = c.coords(res1)
-            if x2 < x1 < x2 + 136 and y2 <= y1 <= y2 + 136:
-                res2 = res[i]["color"]
-                if res2 == "blue":
-                    c.delete(res[i]["img"])
-                    c.delete(bullet_blue[j - n]["fill"])
-                    del res[i]['color']
-                    del bullet_blue[j - n]["fill"]
-                    n += 1
-                    if not 'color' in res[i]:
-                        del res[i]
-                    if not 'fill' in bullet_blue[j]:
-                        del bullet_blue[j]
-                        break
-                else:
-                    c.delete(bullet[j - S]["fill"])
-                    del bullet[j - S]["fill"]
-                    if not 'fill' in bullet[j]:
-                        del bullet[j]
-                    if v == 0:
-                        h_p = c.create_image((80 * v) + 10, 950, image=black_hp, anchor=NW)
-                    if v == 1:
-                        h_p2 = c.create_image((80 * v) + 10, 950, image=black_hp, anchor=NW)
-                    if v == 2:
-                        h_p3 = c.create_image((80 * v) + 10, 950, image=black_hp, anchor=NW)
-                    if v == 3:
-                        h_p4 = c.create_image((80 * v) + 10, 950, image=black_hp, anchor=NW)
-                    if v == 4:
-                        h_p5 = c.create_image((80 * v) + 10, 950, image=black_hp, anchor=NW)
-                    v += 1
-                    break
-    c.after(50, Player2)
-c.after(50, Player2)
+#
+# def Player2():
+#     n = 0
+#     S = 0
+#     v = 0
+#     for j in range(len(bullet_blue)):
+#         for i in range(len(res)):
+#             bullet1 = bullet_blue[j - n]["fill"]
+#             x1, y1 = c.coords(bullet1)
+#             res1 = res[i]["img"]
+#             x2, y2 = c.coords(res1)
+#             if x2 < x1 < x2 + 136 and y2 <= y1 <= y2 + 136:
+#                 res2 = res[i]["color"]
+#                 if res2 == "blue":
+#                     c.delete(res[i]["img"])
+#                     c.delete(bullet_blue[j - n]["fill"])
+#                     del res[i]['color']
+#                     del bullet_blue[j - n]["fill"]
+#                     n += 1
+#                     if not 'color' in res[i]:
+#                         del res[i]
+#                     if not 'fill' in bullet_blue[j]:
+#                         del bullet_blue[j]
+#                         break
+#                 else:
+#                     c.delete(bullet[j - S]["fill"])
+#                     del bullet[j - S]["fill"]
+#                     if not 'fill' in bullet[j]:
+#                         del bullet[j]
+#                     if v == 0:
+#                         h_p = c.create_image((80 * v) + 10, 950, image=black_hp, anchor=NW)
+#                     if v == 1:
+#                         h_p2 = c.create_image((80 * v) + 10, 950, image=black_hp, anchor=NW)
+#                     if v == 2:
+#                         h_p3 = c.create_image((80 * v) + 10, 950, image=black_hp, anchor=NW)
+#                     if v == 3:
+#                         h_p4 = c.create_image((80 * v) + 10, 950, image=black_hp, anchor=NW)
+#                     if v == 4:
+#                         h_p5 = c.create_image((80 * v) + 10, 950, image=black_hp, anchor=NW)
+#                     v += 1
+#                     break
+#     c.after(50, Player2)
+# c.after(50, Player2)
 
 mainloop()
