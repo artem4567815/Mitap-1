@@ -54,20 +54,18 @@ hp3 = c.create_image(170, 730, image=red_hp, tag='down', anchor=NW)
 hp2 = c.create_image(250, 730, image=red_hp, tag='down', anchor=NW)
 hp = c.create_image(330, 730, image=red_hp, tag='down', anchor=NW)
 
+state = "blue"
 class BulletClass:
 
     def __init__(self, tx, ty, image):
         self.tx = tx
         self.ty = ty
         self.image = image
-
-
 def Move_aim_down():
     global time
     c.move(aim2, 0, vy)
     c.after(time, Move_aim_down)
 c.after(time, Move_aim_down)
-
 def Move_aim(key):
     x, y = c.coords(aim2)
     print(y)
@@ -99,6 +97,7 @@ def Move_squ():
     for i in range(len(res)):
         res1 = res[i]["img"]
         c.tag_raise(aim2, res1)
+        c.tag_raise(base1, res1)
         c.move(res1, 0, vy)
     for j in range(len(bullet)):
         bullet1 = bullet[j]
@@ -131,10 +130,24 @@ def spawn_bullet_green(event):
 #             c.tag_lower(bullet2)
 #             bullet_blue.append({"fill": bullet2})
 
+def spawn_bullet_blue(event):
+    for i in range(len(res)):
+        res1 = res[i]["img"]
+        x, y = c.coords(res1)
+        x1, y1 = c.coords(aim2)
+        x1 += 68
+        y1 += 68
+        if x < x1 <= x + 136 and y <= y1 <= y + 136:
+            bullet1 = BulletClass(x1, y1,
+                                  c.create_image(496, 669, image=bullet_creat_blue, anchor=NW))
+            c.tag_raise(bullet1.image)
+            bullet_blue.append(bullet1)
 
 def Move_two_bul(event):
-    #spawn_bullet_blue(event)
-    spawn_bullet_green(event)
+    if state == "green":
+        spawn_bullet_green(event)
+    if state == "blue":
+        spawn_bullet_blue(event)
 c.bind("<Button-1>", Move_two_bul)
 
 
@@ -163,6 +176,27 @@ def Move_bullet():
     c.after(6, Move_bullet)
 c.after(6, Move_bullet)
 
+def Move_bullet_blue():
+    t1 = []
+    for i in range(len(bullet_blue)):
+        bullet1 = bullet[i]
+        x3, y3 = c.coords(bullet1.image)
+        s = (bullet1.tx - x3) ** 2 + (y3 - bullet1.ty) ** 2
+        s2 = math.sqrt(s)
+        coef = 35 / s2
+        dy = -int((y3 - bullet1.ty)) * coef
+        c.move(bullet1.image, int((bullet1.tx - x3) * coef), dy)
+        x3, y3 = c.coords(bullet1.image)
+        if x3 + 80 < 0 or y3 + 20 < 0 or dy > 0:
+            t1.append(i)
+    n = 0
+    for j in range(len(t1)):
+        b1 = bullet[t1[j] - n]
+        del bullet[t1[j] - n]
+        c.delete(b1.image)
+        n += 1
+    c.after(6, Move_bullet)
+c.after(6, Move_bullet)
 
 # def Move_bullet_blue():
 #     c.tag_raise(cannon_blue)
@@ -192,6 +226,7 @@ c.after(50, Layer)
 
 
 def Player():
+    global state
     t1 = []
     t2 = []
     for j in range(len(bullet)):
@@ -204,6 +239,7 @@ def Player():
                     and 0 < x1 - x2 < 136 and 0 < y1 - y2 < 136:
                 res2 = res[i]["color"]
                 if res2 == "green":
+                    state = "green"
                     t1.append(i)
                 t2.append(j)
                 break
@@ -222,11 +258,41 @@ def Player():
         c.delete(b1.image)
         n += 1
     c.after(50, Player)
-
-
 c.after(50, Player)
-
-#
+def Player2():
+    global state
+    t1 = []
+    t2 = []
+    for j in range(len(bullet)):
+        bullet1 = bullet[j]
+        x1, y1 = c.coords(bullet1.image)
+        for i in range(len(res)):
+            res1 = res[i]["img"]
+            x2, y2 = c.coords(res1)
+            if 0 < x1 - bullet1.tx + 40 < 136 and 0 < y1 - bullet1.ty + 20 < 136 \
+                    and 0 < x1 - x2 < 136 and 0 < y1 - y2 < 136:
+                res2 = res[i]["color"]
+                if res2 == "blue":
+                    state = "blue"
+                    t1.append(i)
+                t2.append(j)
+                break
+        n = 0
+        for h in range(len(t1)):
+            r1 = res[t1[h] - n]["img"]
+            del res[t1[h] - n]['color']
+            if not ('color' in res[t1[h] - n]):
+                del res[t1[h] - n]
+                c.delete(r1)
+            n += 1
+    n = 0
+    for k in range(len(t2)):
+        b1 = bullet[t2[k] - n]
+        del bullet[t2[k] - n]
+        c.delete(b1.image)
+        n += 1
+    c.after(50, Player2)
+c.after(50, Player2)
 # def Player2():
 #     n = 0
 #     S = 0
